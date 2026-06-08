@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогноз миграции населения регионов РФ</title>
+    <meta name="description" content="Прогнозирование миграции населения регионов Российской Федерации на основе экономических показателей с использованием нейронных сетей">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Заставка (Splash Screen) -->
+    <div id="splash_screen" class="splash-screen">
+        <div class="splash-content">
+            <h2 class="splash-title">ВКР</h2>
+            <p class="splash-name">Новиков Павел</p>
+        </div>
+    </div>
+
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="glass-container">
+        <header>
+            <h1>Прогноз миграции <span>ИИ</span></h1>
+            <p class="subtitle">Нейросетевая модель на данных Росстата (2010–2023)</p>
+        </header>
+
+        <!-- Метрики модели -->
+        <div class="metrics-bar" id="metrics_bar">
+            <div class="metric-item">
+                <span class="metric-label">R²</span>
+                <span class="metric-value" id="metric_r2">—</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">MAE</span>
+                <span class="metric-value" id="metric_mae">—</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">RMSE</span>
+                <span class="metric-value" id="metric_rmse">—</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">CV R² (5-fold)</span>
+                <span class="metric-value" id="metric_cv">—</span>
+            </div>
+        </div>
+
+        <main>
+            <div class="controls-panel">
+                <div class="form-group">
+                    <label>Регион РФ</label>
+                    <select id="region_selector" placeholder="Выберите регион...">
+                        <option value="">Загрузка...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Год <span id="year_val" class="val-badge">2024 г.</span></label>
+                    <input type="range" id="year" min="2011" max="2035" step="1" value="2024">
+                </div>
+
+                <div class="form-group">
+                    <label>ВРП на душу населения <span id="grp_val" class="val-badge">600 т.р.</span></label>
+                    <input type="range" id="grp" min="40" max="10000" step="10" value="600">
+                </div>
+
+                <div class="form-group">
+                    <label>Средние доходы (руб./мес.) <span id="income_val" class="val-badge">30000 р.</span></label>
+                    <input type="range" id="income" min="5000" max="300000" step="500" value="30000">
+                </div>
+
+                <div class="form-group">
+                    <label>Безработица (%) <span id="unemp_val" class="val-badge">5.0%</span></label>
+                    <input type="range" id="unemployment" min="0.5" max="50" step="0.1" value="5.0">
+                </div>
+
+                <div class="form-group">
+                    <label>Стоимость жилья (руб./м²) <span id="housing_val" class="val-badge">60000 р.</span></label>
+                    <input type="range" id="housing_price" min="15000" max="1000000" step="1000" value="60000">
+                </div>
+
+                <div class="form-group">
+                    <label>Ставка по ипотеке (%) <span id="mortgage_val" class="val-badge">9.0%</span></label>
+                    <input type="range" id="mortgage_rate" min="3" max="20" step="0.1" value="9.0">
+                </div>
+
+                <div class="form-group">
+                    <label>Инвестиции на душу (т.р.) <span id="invest_val" class="val-badge">80 т.р.</span></label>
+                    <input type="range" id="investment" min="5" max="3000" step="5" value="80">
+                </div>
+            </div>
+
+            <div class="result-panel">
+                <div class="prediction-box">
+                    <h3>Коэффициент миграционного прироста</h3>
+                    <div class="prediction-value" id="prediction_result">
+                        0.00 <span class="unit">на 10 000 чел.</span>
+                    </div>
+                    <div class="trend-indicator" id="trend">Ожидание данных...</div>
+                    <div class="advice-box custom-scroll" id="advice_text">
+                        Выберите регион для начала работы.
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
