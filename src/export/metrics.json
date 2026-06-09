@@ -1,0 +1,19 @@
+{
+  "mae": 22.63,
+  "rmse": 31.59,
+  "r2": 0.9369,
+  "input_dim": 11,
+  "numeric_cols": [
+    "GRP_per_capita",
+    "Income_per_capita",
+    "Unemployment_rate",
+    "Housing_price",
+    "Housing_construction_rate",
+    "Investment_per_capita",
+    "Housing_affordability",
+    "Real_income_index",
+    "GRP_per_capita_lag1",
+    "Unemployment_rate_lag1",
+    "Migration_rate_lag1"
+  ]
+}
