@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         income: document.getElementById('income'),
         unemployment: document.getElementById('unemployment'),
         housing_price: document.getElementById('housing_price'),
-        mortgage_rate: document.getElementById('mortgage_rate'),
+        housing_construction_rate: document.getElementById('housing_construction_rate'),
         investment: document.getElementById('investment'),
     };
 
@@ -25,18 +25,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         income: document.getElementById('income_val'),
         unemployment: document.getElementById('unemp_val'),
         housing_price: document.getElementById('housing_val'),
-        mortgage_rate: document.getElementById('mortgage_val'),
+        housing_construction_rate: document.getElementById('housing_const_val'),
         investment: document.getElementById('invest_val'),
     };
 
     const resultBox = document.getElementById('prediction_result');
     const trendBox = document.getElementById('trend');
-    const adviceBox = document.getElementById('advice_text');
 
     let regionsDataSet = [];
 
     // Последний известный год в датасете (исторические данные до этого года включительно)
-    const LAST_HISTORY_YEAR = 2023;
+    const LAST_HISTORY_YEAR = 2024;
 
     // === 1. Загрузка метрик модели ===
     try {
@@ -79,17 +78,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // === ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ ПОЛЗУНКОВ ===
     const updateDisplays = () => {
         valueDisplays.year.innerText = `${inputs.year.value} г.`;
-        valueDisplays.grp.innerText = `${inputs.grp.value} т.р.`;
-        valueDisplays.income.innerText = `${inputs.income.value} р.`;
+        valueDisplays.grp.innerText = `${inputs.grp.value} руб.`;
+        valueDisplays.income.innerText = `${inputs.income.value} руб.`;
         valueDisplays.unemployment.innerText = `${inputs.unemployment.value}%`;
-        valueDisplays.housing_price.innerText = `${inputs.housing_price.value} р.`;
-        valueDisplays.mortgage_rate.innerText = `${inputs.mortgage_rate.value}%`;
-        valueDisplays.investment.innerText = `${inputs.investment.value} т.р.`;
+        valueDisplays.housing_price.innerText = `${inputs.housing_price.value} руб.`;
+        valueDisplays.housing_construction_rate.innerText = `${inputs.housing_construction_rate.value} м²`;
+        valueDisplays.investment.innerText = `${inputs.investment.value} руб.`;
     };
 
     // === БЛОКИРОВКА ПОЛЗУНКОВ (для исторических данных) ===
     const lockSliders = (isLocked) => {
-        ['grp', 'income', 'unemployment', 'housing_price', 'mortgage_rate', 'investment'].forEach(key => {
+        ['grp', 'income', 'unemployment', 'housing_price', 'housing_construction_rate', 'investment'].forEach(key => {
             const el = inputs[key];
             if (isLocked) {
                 el.setAttribute('disabled', 'true');
@@ -107,7 +106,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const renderData = (val, isHistory, meta) => {
         resultBox.style.opacity = 0;
         trendBox.style.opacity = 0;
-        adviceBox.style.opacity = 0;
 
         setTimeout(() => {
             resultBox.innerHTML = `${val > 0 ? '+' : ''}${val.toFixed(2)} <span class="unit">на 10 000 чел.</span>`;
@@ -121,46 +119,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                 trendBox.innerText = '📖 ФАКТ РОССТАТА';
                 trendBox.style.background = 'rgba(56, 189, 248, 0.2)';
                 trendBox.style.color = '#38bdf8';
-                adviceBox.innerHTML = `<b>🔎 Факт:</b> за <b>${meta.year}</b> год коэффициент миграционного прироста в регионе «<b>${meta.region}</b>» составил <b>${val > 0 ? '+' : ''}${val.toFixed(1)}</b> на 10 000 чел.` +
-                    `<br><br>ВРП: ${meta.grp} т.р./чел. | Доходы: ${meta.income} руб./мес. | Безработица: ${meta.unemployment}%` +
-                    `<br>Жильё: ${meta.housing_price} руб./м² | Ипотека: ${meta.mortgage_rate}%`;
             } else {
                 if (val > 6) {
                     resultBox.classList.add('positive');
                     trendBox.innerText = '🚀 ПРОГНОЗ: Значительный приток';
                     trendBox.style.background = 'rgba(74, 222, 128, 0.2)';
                     trendBox.style.color = '#4ade80';
-                    adviceBox.innerHTML = `<b>Прогноз нейросети:</b> модель предсказывает <b>значительный приток</b> населения при данных экономических условиях. Высокий ВРП и доходы создают притягивающий эффект.`;
                 } else if (val > 1) {
                     resultBox.classList.add('positive');
                     trendBox.innerText = '📊 ПРОГНОЗ: Умеренный приток';
                     trendBox.style.background = 'rgba(74, 222, 128, 0.2)';
                     trendBox.style.color = '#4ade80';
-                    adviceBox.innerHTML = `<b>Прогноз нейросети:</b> модель предсказывает <b>умеренный приток</b> населения. Положительная динамика экономических показателей.`;
                 } else if (val < -6) {
                     resultBox.classList.add('negative');
                     trendBox.innerText = '⚠️ ПРОГНОЗ: Серьёзный отток';
                     trendBox.style.background = 'rgba(248, 113, 113, 0.2)';
                     trendBox.style.color = '#f87171';
-                    adviceBox.innerHTML = `<b>Прогноз нейросети:</b> модель прогнозирует <b>значительный отток</b> населения. Неблагоприятная экономическая ситуация стимулирует миграцию.`;
                 } else if (val < -1) {
                     resultBox.classList.add('negative');
                     trendBox.innerText = '📉 ПРОГНОЗ: Умеренный отток';
                     trendBox.style.background = 'rgba(248, 113, 113, 0.2)';
                     trendBox.style.color = '#f87171';
-                    adviceBox.innerHTML = `<b>Прогноз нейросети:</b> модель прогнозирует <b>умеренный отток</b> населения.`;
                 } else {
                     resultBox.classList.add('neutral');
                     trendBox.innerText = '⚖️ ПРОГНОЗ: Баланс';
                     trendBox.style.background = 'rgba(255, 255, 255, 0.1)';
                     trendBox.style.color = '#f8fafc';
-                    adviceBox.innerHTML = `<b>Прогноз нейросети:</b> миграционный баланс в целом <b>стабилен</b>.`;
                 }
             }
 
             resultBox.style.opacity = 1;
             trendBox.style.opacity = 1;
-            adviceBox.style.opacity = 1;
         }, 150);
     };
 
@@ -172,7 +161,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const regionName = inputs.region_selector.value;
 
         if (!regionName || regionName === "") {
-            adviceBox.innerHTML = "Пожалуйста, выберите регион для начала работы.";
             return;
         }
 
@@ -194,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     inputs.income.value = Math.round(data.income);
                     inputs.unemployment.value = data.unemployment;
                     inputs.housing_price.value = Math.round(data.housing_price);
-                    inputs.mortgage_rate.value = data.mortgage_rate;
+                    inputs.housing_construction_rate.value = data.housing_construction_rate;
                     inputs.investment.value = Math.round(data.investment);
                     updateDisplays();
 
@@ -203,13 +191,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         grp: data.grp, income: data.income,
                         unemployment: data.unemployment,
                         housing_price: data.housing_price,
-                        mortgage_rate: data.mortgage_rate,
+                        housing_construction_rate: data.housing_construction_rate,
+                        investment: data.investment
                     });
                 } else {
-                    adviceBox.innerHTML = `Данные по региону «${regionName}» за ${year} год отсутствуют в датасете.`;
+                    console.warn(`Данные по региону «${regionName}» за ${year} год отсутствуют.`);
                 }
             } else {
-                // --- ПРОГНОЗ НЕЙРОСЕТЬЮ ---
+                // --- ПРОГНОЗ ---
                 lockSliders(false);
                 const r = await fetch('/predict', {
                     method: 'POST',
@@ -222,7 +211,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         income: inputs.income.value,
                         unemployment: inputs.unemployment.value,
                         housing_price: inputs.housing_price.value,
-                        mortgage_rate: inputs.mortgage_rate.value,
+                        housing_construction_rate: inputs.housing_construction_rate.value,
                         investment: inputs.investment.value,
                         population: 1000,  // приблизительное значение
                     })
@@ -231,12 +220,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (data.status === 'success') {
                     renderData(data.migration_rate, false, {});
                 } else {
-                    adviceBox.innerHTML = `Ошибка прогноза: ${data.message || 'неизвестная ошибка'}`;
+                    console.error(`Ошибка прогноза: ${data.message}`);
                 }
             }
         } catch(e) {
             console.error('Error:', e);
-            adviceBox.innerHTML = 'Ошибка связи с сервером.';
         }
     };
 

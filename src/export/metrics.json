@@ -1,26 +1,19 @@
 {
-  "mae": 3.1,
-  "rmse": 3.78,
-  "r2": 0.9895,
-  "cv_r2_mean": 0.9887,
-  "cv_r2_std": 0.0037,
-  "input_dim": 21,
+  "mae": 22.63,
+  "rmse": 31.59,
+  "r2": 0.9369,
+  "input_dim": 11,
   "numeric_cols": [
-    "Year",
     "GRP_per_capita",
     "Income_per_capita",
     "Unemployment_rate",
     "Housing_price",
-    "Mortgage_rate",
+    "Housing_construction_rate",
     "Investment_per_capita",
-    "Population",
     "Housing_affordability",
     "Real_income_index",
     "GRP_per_capita_lag1",
     "Unemployment_rate_lag1",
     "Migration_rate_lag1"
-  ],
-  "categorical_cols": [
-    "Federal_District"
   ]
 }
