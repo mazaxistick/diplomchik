@@ -1,7 +1,7 @@
 Flask
 pandas
 scikit-learn
-torch --index-url https://download.pytorch.org/whl/cpu
+xgboost
 joblib
 numpy
 gunicorn
